@@ -2,6 +2,8 @@
 using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
+using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// ロビー画面の管理クラス
@@ -18,7 +20,8 @@ public class LobbyManager : UdonSharpBehaviour
     public int minPlayers = 4;       // ゲーム開始に必要な最小人数
 
     // --- UI要素 ---
-    public UnityEngine.UI.Text playerCountText; // 現在の参加人数表示
+    public TextMeshProUGUI playerCountTextForOwnerUI; // 現在の参加人数表示
+    public TextMeshProUGUI playerCountTextForWaitingUI; // 現在の参加人数表示
     public GameObject ownerUI;                   // オーナー専用UI（開始ボタン/設定ボタン）
     public GameObject waitingUI;                 // 参加者用UI（待機メッセージ）
 
@@ -37,10 +40,7 @@ public class LobbyManager : UdonSharpBehaviour
     private void Update()
     {
         // 現在の参加人数を取得（VRChat API）
-        int playerCount = VRCPlayerApi.GetPlayerCount();
-
-        // UIに参加人数を表示
-        playerCountText.text = "現在の参加人数: " + playerCount + "/8";
+        int playerCount = VRCPlayerApi.GetPlayerCount();      
 
         // --- オーナーと参加者でUI切り替え ---
         if (Networking.IsOwner(gameObject))
@@ -48,7 +48,7 @@ public class LobbyManager : UdonSharpBehaviour
             // オーナー専用UIを表示
             ownerUI.SetActive(true);
             waitingUI.SetActive(false);
-
+            playerCountTextForOwnerUI.text = "現在の参加人数: " + playerCount + "/8";
             // 開始ボタンの有効/無効を人数条件で制御
             ownerUI.transform.Find("StartButton").gameObject
                 .SetActive(playerCount >= minPlayers);
@@ -58,6 +58,7 @@ public class LobbyManager : UdonSharpBehaviour
             // 参加者用UIを表示（待機メッセージなど）
             ownerUI.SetActive(false);
             waitingUI.SetActive(true);
+            playerCountTextForWaitingUI.text = "現在の参加人数: " + playerCount + "/8";
         }
     }
 
