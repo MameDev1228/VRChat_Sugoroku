@@ -24,16 +24,22 @@ public class LobbyManager : UdonSharpBehaviour
     public TextMeshProUGUI playerCountTextForWaitingUI; // 現在の参加人数表示
     public GameObject ownerUI;                   // オーナー専用UI（開始ボタン/設定ボタン）
     public GameObject waitingUI;                 // 参加者用UI（待機メッセージ）
-
+    public Transform firstSpawnPoint;            // 初期地点設定
     // =====================================================================
     // 初期化処理
     // =====================================================================
     private void Start()
     {
+
         // 同じオブジェクトに GameManager がアタッチされている想定で取得
         gameManager = this.GetComponent<GameManager>();
     }
-
+    //参加したときに参加者を初期地点へ
+    public override void OnPlayerJoined(VRCPlayerApi player)
+    {
+        VRCPlayerApi localplayer = Networking.LocalPlayer;
+        localplayer.TeleportTo(firstSpawnPoint.position, firstSpawnPoint.rotation);
+    }
     // =====================================================================
     // 毎フレーム更新（UI更新）
     // =====================================================================

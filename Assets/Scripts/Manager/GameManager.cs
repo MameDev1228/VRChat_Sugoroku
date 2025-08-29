@@ -53,13 +53,11 @@ public class GameManager : UdonSharpBehaviour
     public override void OnPlayerJoined(VRCPlayerApi player)
     {
         // ホストのみがプレイヤー管理
-        if (!Networking.IsOwner(gameObject)) return;
         RegisterPlayer(player);
     }
 
     public override void OnPlayerLeft(VRCPlayerApi player)
     {
-        if (!Networking.IsOwner(gameObject)) return;
         bool inGame = roundCount > 0; // すでにゲーム開始済みか
         UnregisterPlayer(player, inGame);
     }
